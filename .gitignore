@@ -1,5 +1,15 @@
+# General
 node_modules/
-server/app.js
-server/routes/**/*.js
 .*.swp
 .*.swo
+
+# Server
+server/app.js
+server/routes/**/*.js
+server/public/javascripts
+server/public/stylesheets
+
+# Client
+client/app/components/
+client/app/javascripts/vendor
+client/app/javascripts/application.js
