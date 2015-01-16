@@ -6,6 +6,7 @@ node_modules/
 # Server
 server/app.js
 server/routes/**/*.js
+server/models/**/*.js
 server/public/javascripts
 server/public/stylesheets
 

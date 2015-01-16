@@ -1,13 +1,14 @@
-express = require('express')
-path = require('path')
-favicon = require('serve-favicon')
-logger = require('morgan')
-cookieParser = require('cookie-parser')
-bodyParser = require('body-parser')
+express      = require 'express'
+path         = require 'path'
+favicon      = require 'serve-favicon'
+logger       = require 'morgan'
+cookieParser = require 'cookie-parser'
+bodyParser   = require 'body-parser'
 
-index = require('./routes/index')
-api   = require('./routes/api')
-users = require('./routes/users')
+index   = require './routes/index'
+api     = require './routes/api'
+users   = require './routes/users'
+session = require './routes/session'
 
 app = express()
 
@@ -23,9 +24,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/',          index)
-app.use('/api',       api)
-app.use('/api/users', users)
+app.get '/',            index
+app.use '/',            session
+app.use '/api',         api
+app.use '/api/users',   users
 
 # catch 404 and forward to error handler
 app.use (req, res, next) ->
@@ -37,10 +39,10 @@ app.use (req, res, next) ->
 
 # development error handler
 # will print stacktrace
-if (app.get('env') == 'development')
+if app.get('env') == 'development'
   app.use (err, req, res, next) ->
     res.status(err.status || 500)
-    res.render 'error',
+    res.json
       message: err.message
       error: err
 
@@ -48,7 +50,7 @@ if (app.get('env') == 'development')
 # no stacktraces leaked to user
 app.use (err, req, res, next) ->
   res.status(err.status || 500)
-  res.render 'error',
+  res.json
     message: err.message
     error: {}
 
