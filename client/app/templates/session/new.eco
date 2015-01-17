@@ -1,0 +1,9 @@
+<div class="credentials-input">
+  <div class="loading-helper" style="display:none;">Loading</div>
+  <div class="flash-error"></div>
+  <input type="text"     name="email" />
+  <input type="password" name="password" />
+  <div class="controls">
+    <button class="connect">Connect</button>
+  </div>
+</div>

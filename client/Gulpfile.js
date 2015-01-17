@@ -10,7 +10,10 @@ var sass           = require('gulp-sass');
 var debug = true;
 
 var paths = {
-  js:     [ 'app/javascripts/vendor/**/*.js', 'app/javascripts/**/*.js' ],
+  js:     [ 'app/javascripts/vendor/underscore/*.js',
+            'app/javascripts/vendor/**/*.js',
+            'app/javascripts/templates.js',
+            'app/javascripts/**/*.js' ],
   sass:   [ 'app/stylesheets/application.sass', 'app/stylesheets/**/*.css' ],
   coffee: [ 'app/coffee/*.coffee', 'app/coffee/**/*.coffee' ],
   eco:    [ 'app/templates/*.eco', 'app/templates/**/*.eco' ]
@@ -55,4 +58,5 @@ gulp.task('watch', function() {
   gulp.watch(paths.eco,    ['eco']);
 });
 
+gulp.task('recompile', ['bower-files', 'eco', 'coffee', 'javascript', 'stylesheets', 'watch']);
 gulp.task('default', ['bower-files', 'watch']);

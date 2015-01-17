@@ -14,3 +14,4 @@ server/public/stylesheets
 client/app/components/
 client/app/javascripts/vendor
 client/app/javascripts/application.js
+client/app/javascripts/templates.js
