@@ -3,6 +3,7 @@ var bower          = require('gulp-bower');
 var gulpBowerFiles = require('gulp-bower-files');
 var concat         = require('gulp-concat');
 var coffee         = require('gulp-coffee');
+var eco            = require('gulp-eco');
 var uglify         = require('gulp-uglify');
 var sass           = require('gulp-sass');
 
@@ -11,7 +12,8 @@ var debug = true;
 var paths = {
   js:     [ 'app/javascripts/vendor/**/*.js', 'app/javascripts/**/*.js' ],
   sass:   [ 'app/stylesheets/application.sass', 'app/stylesheets/**/*.css' ],
-  coffee: [ 'app/coffee/**/*.coffee' ]
+  coffee: [ 'app/coffee/*.coffee', 'app/coffee/**/*.coffee' ],
+  eco:    [ 'app/templates/*.eco', 'app/templates/**/*.eco' ]
 };
 
 gulp.task('bower-files', ['bower'], function() {
@@ -24,6 +26,13 @@ gulp.task('bower', function() {
 
 gulp.task('coffee', function() {
   return gulp.src(paths.coffee).pipe(coffee()).pipe(concat('application.js')).pipe(gulp.dest("./app/javascripts/"));
+});
+
+gulp.task('eco', function() {
+  var eco_options = {
+    basePath: 'app/templates'
+  };
+  return gulp.src(paths.eco).pipe(eco(eco_options)).pipe(concat('templates.js')).pipe(gulp.dest("./app/javascripts/"));
 });
 
 gulp.task('javascript', ['coffee'], function() {
@@ -43,6 +52,7 @@ gulp.task('watch', function() {
   gulp.watch(paths.js,     ['javascript']);
   gulp.watch(paths.sass,   ['stylesheets']);
   gulp.watch(paths.coffee, ['coffee']);
+  gulp.watch(paths.eco,    ['eco']);
 });
 
 gulp.task('default', ['bower-files', 'watch']);
