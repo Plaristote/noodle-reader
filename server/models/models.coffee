@@ -37,4 +37,8 @@ build_module = ->
   User::publicAttributes = () ->
     email: @email
 
+  User::updateAttributes = (attributes) ->
+    delete @[key] for key in ['email', 'id']
+    @[key] = value for key,value of attributes
+
 build_module() unless global.User?

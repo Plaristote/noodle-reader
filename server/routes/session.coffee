@@ -47,7 +47,7 @@ router.post '/session', (req, res) ->
       res.cookie 'user_id', user.id, signed: true
       res.json user
   authenticate req, res
-  
+
 router.delete '/session', (req, res) ->
   if req.signedCookies.user_id?
     res.cookie 'user_id', null, signed: true
