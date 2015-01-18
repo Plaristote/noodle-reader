@@ -4,6 +4,7 @@ favicon      = require 'serve-favicon'
 logger       = require 'morgan'
 cookieParser = require 'cookie-parser'
 bodyParser   = require 'body-parser'
+passport     = require 'passport'
 
 index   = require './routes/index'
 api     = require './routes/api'
@@ -18,11 +19,13 @@ app.set('view engine', 'jade')
 
 # uncomment after placing your favicon in /public
 #app.use(favicon(__dirname + '/public/favicon.ico'))
-app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use logger('dev')
+app.use bodyParser.json()
+app.use bodyParser.urlencoded extended: true
+app.use cookieParser 'SECRET_S141U539C26K12A456D1CK'
+app.use passport.initialize()
+app.use passport.session()
+app.use express.static(path.join(__dirname, 'public'))
 
 app.get '/',            index
 app.use '/',            session

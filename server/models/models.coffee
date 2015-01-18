@@ -33,5 +33,8 @@ build_module = ->
         options.success()
       else
         options.failure()
+        
+  User::publicAttributes = () ->
+    email: @email
 
 build_module() unless global.User?

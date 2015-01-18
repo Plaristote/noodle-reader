@@ -4,37 +4,48 @@ LocalStrategy    = (require 'passport-local').Strategy
 express          = require 'express'
 router           = express.Router()
 
-auth_fail_message = 'Incorrect username or password'
-
-passport.use new LocalStrategy { usernameField: 'email' }, (email, password, done) ->
-  console.log "searching for user #{email}"
+authenticate_user_from_credentials = (email, password, done) ->
   User.findOne { email: email }, (err, user) ->
-    console.log "searched over"
     if err
       done err
     else if !user
-      done null, false, message: auth_fail_message
+      done null, false
     else
       user.comparePasswords password,
         success: -> done null, user
-        failure: -> done null, false, message: auth_fail_message
+        failure: -> done null, false
+
+authenticate_user_from_id = (id, done) ->
+  User.findOne { _id: id }, (err, user) ->
+    if err
+      done err
+    else if !user
+      done null, false
+    else
+      done null, user
+
+passport.use new LocalStrategy { usernameField: 'email' }, authenticate_user_from_credentials
 
 # Require authentication
 router.all '/api/*', (req, res, next) ->
   return next() if req.path == '/api/users' and req.method == 'POST'
-  authorize = passport.authorize 'local', (err, user, data) ->
+  authenticate_user_from_id req.signedCookies.user_id, (err, user) ->
     if err or user == false
-      res.status(403).json(data)
+      res.status(401).json error: 'authentication required'
     else
+      req.user = user
       next()
-  authorize req, res
 
 # Create session
 router.post '/session', (req, res) ->
-  passport.authenticate 'local', (err, user, data) ->
-    if err or !user
-      res.json req.data
+  authenticate = passport.authenticate 'local', (err, user, data) ->
+    if err
+      res.json error: err
+    else if !user
+      res.json error: 'invalid credentials'
     else
+      res.cookie 'user_id', user.id, signed: true
       res.json user
+  authenticate req, res
 
 module.exports = router
