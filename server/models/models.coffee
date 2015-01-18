@@ -17,7 +17,7 @@ build_module = ->
       next()
 
   global.User = mongoose.model 'User', user_schema
-  
+
   User::encryptPassword = (next) ->
     bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) =>
       unless err

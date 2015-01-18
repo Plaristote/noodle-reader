@@ -15,7 +15,8 @@ router.put '/:id', (req, res, next) ->
   console.log 'update'
   res.json coucou: 'update'
   
-router.post '/new', (req, res) ->
+router.post '/', (req, res) ->
   console.log 'create'
+  res.json coucou: 'create'
 
 module.exports = router

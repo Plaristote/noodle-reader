@@ -20,12 +20,16 @@ passport.use new LocalStrategy { usernameField: 'email' }, (email, password, don
         failure: -> done null, false, message: auth_fail_message
 
 # Require authentication
-router.all '/api/*', (req, res) ->
-  return if req.path == '/api/users/new'
+router.all '/api/*', (req, res, next) ->
+  return next() if req.path == '/api/users' and req.method == 'POST'
   authorize = passport.authorize 'local', (err, user, data) ->
-    res.json data if err or user == false
+    if err or user == false
+      res.status(403).json(data)
+    else
+      next()
   authorize req, res
 
+# Create session
 router.post '/session', (req, res) ->
   passport.authenticate 'local', (err, user, data) ->
     if err or !user
