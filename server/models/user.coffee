@@ -7,6 +7,7 @@ build_module = ->
   user_schema = new mongoose.Schema
     email:    { type: String, required: true, index: { unique: true } }
     password: { type: String, required: true }
+    feeds:    { type: Array }
 
   user_schema.pre 'save', (next) ->
     if @isModified 'password'
@@ -34,6 +35,7 @@ build_module = ->
 
   User::publicAttributes = () ->
     email: @email
+    feeds: @feeds
 
   User::updateAttributes = (attributes) ->
     delete @[key] for key in ['email', 'id']
