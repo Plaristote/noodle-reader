@@ -41,4 +41,24 @@ build_module = ->
     delete @[key] for key in ['email', 'id']
     @[key] = value for key,value of attributes
 
+  User::subscribeToFeed = (url, next) ->
+    Feed.findOne { url: url }, (err, feed) =>
+      if err? or not feed?
+        feed = new Feed { url: url }
+        feed.save (err) =>
+          if err?
+            next err
+          else
+            @addFeed feed, next
+      else
+        @addFeed feed, next
+
+  User::addFeed = (feed, next) ->
+    @feeds.push feed.id
+    @save (err) =>
+      if err?
+        next err
+      else
+        next null, feed
+
 build_module() unless global.User?

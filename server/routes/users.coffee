@@ -4,7 +4,7 @@ router           = express.Router()
 
 # Require authentication
 router.get '/', (req, res, next) ->
-  res.json oops: 'not yet implemented'
+  res.json req.user.publicAttributes()
 
 router.get '/:id', (req, res, next) ->
   User.findOne { _id: req.params.id }, (err, user) ->

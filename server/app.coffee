@@ -10,6 +10,7 @@ index   = require './routes/index'
 api     = require './routes/api'
 users   = require './routes/users'
 session = require './routes/session'
+feeds   = require './routes/feeds'
 
 app = express()
 
@@ -31,6 +32,7 @@ app.get '/',            index
 app.use '/',            session
 app.use '/api',         api
 app.use '/api/users',   users
+app.use '/api/feeds',   feeds
 
 # catch 404 and forward to error handler
 app.use (req, res, next) ->

@@ -23,11 +23,23 @@ build_module = ->
 
   global.FeedPost = mongoose.model 'FeedPost', feed_post_schema
 
-  Feed::fetch_posts = () ->
+  Feed::fetchPosts = () ->
     null
 
   Feed::posts = (filters = {}) ->
     filters.feed_id = @id
     FeedPost.find filters
+    
+  Feed::publicAttributes = (include_methods = []) ->
+    obj =
+      id:          @id
+      title:       @title
+      url:         @url
+      link:        @link
+      description: @description
+      favicon:     @favicon
+      updated_at:  @updated_at
+    obj[key] = @[key]() for key in include_methods
+    obj
 
 build_module() unless global.Feed?
