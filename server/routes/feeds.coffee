@@ -9,6 +9,8 @@ router.get '/:id', (req, res, next) ->
     else if not feed?
       res.status(404).json error: "feed id #{req.params.id} not found"
     else
+      feed.updatePosts (err) ->
+        console.log 'updatePosts returned with', err
       feed.fetchPosts {}, (err) ->
         if err?
           res.status(500).json error: err

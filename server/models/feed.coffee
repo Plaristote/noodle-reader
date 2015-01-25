@@ -35,12 +35,9 @@ build_module = ->
       next null
 
   Feed::updatePosts = (next) ->
-    console.log 'feed', @
     @initializeFeedParser()
     @feed_parser.on 'error', (error) ->
       next error
-    @feed_parser.on 'readable', ->
-      next()
     feed         = @
     req          = request @url
     req.on 'error', (err) ->
@@ -72,7 +69,7 @@ build_module = ->
         console.log 'failed to save feeditem', err
       else
         console.log 'added feedPost', feedPost.title, feedPost.feed_id
-      
+
   FeedPost::preventDuplicationAndSave = (next) ->
     self = @
     FeedPost.findOne { title: @title, publication_date: @publication_date }, (err, feedPost) ->
