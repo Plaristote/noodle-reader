@@ -7,7 +7,7 @@ build_module = ->
   user_schema = new mongoose.Schema
     email:    { type: String, required: true, index: { unique: true } }
     password: { type: String, required: true }
-    feeds:    { type: Array }
+    feeds:    { type: [String] }
 
   user_schema.pre 'save', (next) ->
     if @isModified 'password'
@@ -41,20 +41,40 @@ build_module = ->
     delete @[key] for key in ['email', 'id']
     @[key] = value for key,value of attributes
 
+  User::unsubscibeFromFeed = (id, next) ->
+    if id in @feeds
+      @feeds = @feeds.filter (word) -> word isnt id
+      @save (err) =>
+        if err?
+          next err
+        else
+          Feed.garbageCollectFeed id, ->
+            console.log "feed #{id} garbage collected"
+          next null, @
+    else
+      next null, null
+
   User::subscribeToFeed = (url, next) ->
     Feed.findOne { url: url }, (err, feed) =>
-      if err? or not feed?
-        feed = new Feed { url: url }
-        feed.save (err) =>
-          if err?
-            next err
-          else
-            @addFeed feed, next
+      if err?
+        next err
+      else if not feed?
+        console.log 'feed not found', feed
+        @createFeed url, next
       else
+        console.log 'feed found', feed
         @addFeed feed, next
 
+  User::createFeed = (url, next) ->
+    user = @
+    Feed.create { url: url }, (err, feed) ->
+      if err?
+        next err
+      else
+        user.addFeed feed, next
+
   User::addFeed = (feed, next) ->
-    @feeds.push feed.id
+    @feeds.push feed.id if feed.id not in @feeds
     @save (err) =>
       if err?
         next err
