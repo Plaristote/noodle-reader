@@ -11,6 +11,7 @@ window.application = new class
     @current_user = new Model.CurrentUser()
     @setup_controllers()
     @setup_backbone()
+    @main_view    = new MainView()
     @trigger 'ready'
 
   setup_backbone: ->

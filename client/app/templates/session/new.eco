@@ -4,6 +4,6 @@
   <input type="text"     name="email" />
   <input type="password" name="password" />
   <div class="controls">
-    <button class="connect">Connect</button>
+    <button class="btn btn-success connect">Connect</button>
   </div>
 </div>
