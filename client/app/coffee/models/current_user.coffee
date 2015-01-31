@@ -1,5 +1,10 @@
 class Model.CurrentUser extends Backbone.Model
-  url: '/session'
+  url:   '/session'
+  feeds: []
+  
+  initialize: ->
+    @feeds = new Model.Feeds()
+    @listenTo @, 'connection:success', @fetch_feeds
 
   connect: () ->
     $.ajax
@@ -19,3 +24,6 @@ class Model.CurrentUser extends Backbone.Model
       success: => @trigger 'disconnection:success'
       error:   => @trigger 'disconnection:failure'
     @trigger 'disconnection:loading'
+
+  fetch_feeds: () ->
+    @feeds.fetch()

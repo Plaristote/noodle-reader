@@ -48,8 +48,15 @@ build_module = ->
   Feed::initializeFeedParser = ->
     feed         = @
     @feed_parser = new FeedParser
+    @feed_parser.on 'meta', ->
+      feed.updateMetaFromStream @
     @feed_parser.on 'readable', ->
       feed.addFeedItemsFromStream @
+      
+  Feed::updateMetaFromStream = (stream) ->
+    for field in [ 'title', 'description', 'favicon', 'link' ]
+      @[field] = stream.meta[field]
+    @save()
 
   Feed::addFeedItemsFromStream = (stream) ->
     @addFeedItem item while (item = stream.read())

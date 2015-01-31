@@ -1,0 +1,7 @@
+<h3>Feeds</h3>
+<button id="add-feed" class="btn btn-info">Add a feed</button>
+<ul class="feed-list">
+  <% for feed in @feeds.models: %>
+    <li class="feed-entry" data-id="<%= feed.get 'id' %>"><%= feed.get 'title' %></li>
+  <% end %>
+</ul>
