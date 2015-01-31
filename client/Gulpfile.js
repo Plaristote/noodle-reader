@@ -10,17 +10,19 @@ var sass           = require('gulp-sass');
 var debug = true;
 
 var paths = {
-  js:     [ 'app/javascripts/vendor/underscore/*.js',
-            'app/javascripts/vendor/**/*.js',
+  js:     [ 'app/vendor/underscore/*.js',
+            'app/vendor/**/*.js',
             'app/javascripts/templates.js',
             'app/javascripts/**/*.js' ],
-  sass:   [ 'app/stylesheets/application.sass', 'app/stylesheets/**/*.css' ],
+  sass:   [ 'app/vendor/**/*.css',
+            'app/stylesheets/application.sass',
+            'app/stylesheets/**/*.css' ],
   coffee: [ 'app/coffee/*.coffee', 'app/coffee/**/*.coffee' ],
   eco:    [ 'app/templates/*.eco', 'app/templates/**/*.eco' ]
 };
 
 gulp.task('bower-files', ['bower'], function() {
-  return gulpBowerFiles().pipe(gulp.dest("./app/javascripts/vendor"));
+  return gulpBowerFiles().pipe(gulp.dest("./app/vendor"));
 });
 
 gulp.task('bower', function() {
@@ -41,7 +43,7 @@ gulp.task('eco', function() {
 gulp.task('javascript', ['coffee'], function() {
   var js = gulp.src(paths.js).pipe(concat('application.js'));
 
-  if (debug == false)
+  if (debug === false)
     js = js.pipe(uglify());
   return js.pipe(gulp.dest("../server/public/javascripts/"));
 });
@@ -52,11 +54,11 @@ gulp.task('stylesheets', function() {
 
 gulp.task('watch', function() {
   gulp.watch('./bower.json', ['bower-files']);
-  gulp.watch(paths.js,     ['javascript']);
-  gulp.watch(paths.sass,   ['stylesheets']);
-  gulp.watch(paths.coffee, ['coffee']);
-  gulp.watch(paths.eco,    ['eco']);
+  gulp.watch(paths.js,       ['javascript']);
+  gulp.watch(paths.sass,     ['stylesheets']);
+  gulp.watch(paths.coffee,   ['coffee']);
+  gulp.watch(paths.eco,      ['eco']);
 });
 
 gulp.task('recompile', ['bower-files', 'eco', 'coffee', 'javascript', 'stylesheets', 'watch']);
-gulp.task('default', ['bower-files', 'watch']);
+gulp.task('default',   ['bower-files', 'watch']);
