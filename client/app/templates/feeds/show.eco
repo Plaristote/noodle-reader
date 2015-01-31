@@ -1,8 +1,8 @@
 <h1><%= @feed.get 'title' %></h1>
-<h4><a href="<%= @feed.get 'link' %>"><%= @feed.get 'description' %></a></h4>
+<h4><a href="<%= @feed.get 'link' %>" target="_blank"><%= @feed.get 'description' %></a></h4>
 
 <% if @feed.has 'feedPosts': %>
   <% for item in (@feed.get 'feedPosts'): %>
-    <%= JST['feeds/_item'] item: item %>
+    <%- JST['feeds/_item'] item: item %>
   <% end %>
 <% end %>
