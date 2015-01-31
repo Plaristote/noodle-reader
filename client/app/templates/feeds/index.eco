@@ -1,7 +1,7 @@
 <h3>Feeds</h3>
-<button id="add-feed" class="btn btn-info">Add a feed</button>
-<ul class="feed-list">
+<button id="add-feed" class="btn btn-info btn-xs">Add a feed</button>
+<ul class="feed-list nav nav-stacked">
   <% for feed in @feeds.models: %>
-    <li class="feed-entry" data-id="<%= feed.get 'id' %>"><%= feed.get 'title' %></li>
+    <li class="feed-entry"><a href="#/feeds/<%= feed.get '_id' %>"><%= feed.get 'title' %></a></li>
   <% end %>
 </ul>

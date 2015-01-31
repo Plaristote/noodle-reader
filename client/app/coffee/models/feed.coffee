@@ -1,3 +1,2 @@
 class Model.Feed extends Backbone.Model
-  url: '/api/feeds'
-  
+  url: -> "/api/feeds/#{@get '_id'}"

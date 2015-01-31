@@ -25,7 +25,7 @@ router.get '/:id', (req, res, next) ->
         if err?
           res.status(500).json error: err
         else
-          res.json feed: feed.publicAttributes()
+          res.json feed.publicAttributes()
 
 router.post '/', (req, res) ->
   url = req.query.url or req.params.url or req.body.url

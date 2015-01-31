@@ -8,23 +8,25 @@ window.application = new class
     $(document).ready => @initialize()
 
   initialize: ->
-    @current_user = new Model.CurrentUser()
-    @setup_controllers()
     @setup_backbone()
+    @current_user = new Model.CurrentUser()
     @main_view    = new MainView()
+    @setup_controllers()
     @trigger 'ready'
 
   setup_backbone: ->
     Backbone.$ = jQuery
-    Backbone.history.start()
 
   setup_controllers: ->
     @session_controller = new Controller.Session()
     @users_controller   = new Controller.Users()
+    @feeds_controller   = new Controller.Feeds()
+    Backbone.history.start()
 
 class window.ApplicationView extends Backbone.View
   render: ->
     $('#page').empty().append @$el
+    @
 
   $: (param) -> $(param, @$el)
   
