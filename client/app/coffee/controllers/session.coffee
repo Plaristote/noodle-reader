@@ -1,6 +1,7 @@
 class Controller.Session extends Backbone.Router
   routes:
-    'session/new': 'new'
+    'session/new':     'new'
+    'session/destroy': 'destroy'
 
   new: ->
     view = new View.SessionNew()
@@ -12,3 +13,6 @@ class Controller.Session extends Backbone.Router
     application.current_user.set 'email',    userData.email
     application.current_user.set 'password', userData.password
     application.current_user.connect()
+
+  destroy: ->
+    application.current_user.disconnect()

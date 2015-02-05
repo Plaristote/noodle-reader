@@ -6,6 +6,8 @@ class window.MainView extends Backbone.View
 
   show_userspace: ->
     $('#user-space').show()
+    $('#connected-user-space').hide()
 
   hide_userspace: ->
     $('#user-space').hide()
+    $('#connected-user-space').show()
