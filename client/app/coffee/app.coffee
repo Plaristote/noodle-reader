@@ -12,6 +12,7 @@ window.application = new class
     @current_user = new Model.CurrentUser()
     @main_view    = new MainView()
     @setup_controllers()
+    @setup_application_events()
     @trigger 'ready'
 
   setup_backbone: ->
@@ -23,13 +24,19 @@ window.application = new class
     @feeds_controller   = new Controller.Feeds()
     Backbone.history.start()
 
+  setup_application_events: ->
+    $(window).scroll => @on_window_scroll()
+
+  on_window_scroll: ->
+    @trigger 'load-more' if $(document).height() - $(window).scrollTop() - window.innerHeight < 10
+
 class window.ApplicationView extends Backbone.View
   render: ->
     $('#page').empty().append @$el
     @
 
   $: (param) -> $(param, @$el)
-  
+
 class window.ApplicationModel extends Backbone.Model
   save: ->
     super null,

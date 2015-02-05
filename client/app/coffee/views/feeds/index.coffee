@@ -1,6 +1,6 @@
 class View.FeedIndex extends Backbone.View
   template: JST['feeds/index']
-  
+
   events:
     'click #add-feed': 'add_feed'
 

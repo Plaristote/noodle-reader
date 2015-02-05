@@ -19,13 +19,22 @@ router.get '/:id', (req, res, next) ->
     else if not feed?
       res.status(404).json error: "feed id #{req.params.id} not found"
     else
-      feed.updatePosts (err) ->
-        console.log 'updatePosts returned with', err
-      feed.fetchPosts {}, (err) ->
-        if err?
-          res.status(500).json error: err
-        else
-          res.json feed.publicAttributes()
+      render_posts feed, req, res
+      feed.updatePostsIfNeeded (err) ->
+        console.log 'updated feed', err
+
+render_posts = (feed, req, res) ->
+  options            = { limit: 10, skip: 0 }
+  filters            = {}
+  options.limit      = (parseInt req.query.itemsPerPage) % 100    if req.query.itemsPerPage?
+  options.skip       = (parseInt req.query.page) * options.limit  if req.query.page?
+  filters.created_at = { $lt: new Date(parseInt req.query.from) } if req.query.from?
+  console.log "Querying for posts before #{filters.created_at.$lt.getTime()}" if filters.created_at?
+  feed.fetchPosts filters, options, (err) ->
+    if err?
+      res.status(500).json error: err
+    else
+      res.json feed.publicAttributes()
 
 router.post '/', (req, res) ->
   url = req.query.url or req.params.url or req.body.url

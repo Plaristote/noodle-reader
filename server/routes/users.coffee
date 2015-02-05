@@ -2,8 +2,11 @@ require '../models/models'
 express          = require 'express'
 router           = express.Router()
 
-# Require authentication
 router.get '/', (req, res, next) ->
+  # Todo: use this route to find users
+  res.json req.user.publicAttributes()
+  
+router.get '/current', (req, res, next) ->
   res.json req.user.publicAttributes()
 
 router.get '/:id', (req, res, next) ->

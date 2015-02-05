@@ -2,6 +2,8 @@ mongoose   = require 'mongoose'
 request    = require 'request'
 FeedParser = require 'feedparser'
 
+update_interval = 60 * 2 # 2 minute
+
 build_module = ->
   feed_schema = new mongoose.Schema
     title:       { type: String }
@@ -24,8 +26,12 @@ build_module = ->
     source:           { type: String }
     created_at:       { type: Date   }
 
-  global.FeedPost = mongoose.model 'FeedPost', feed_post_schema
+  feed_post_schema.pre 'save', (next) ->
+    @created_at = new Date() unless @created_at?
+    next()
 
+  global.FeedPost = mongoose.model 'FeedPost', feed_post_schema
+  
   Feed.garbageCollectFeed = (id, next) ->
     (User.find { feeds: id }).exec (err, users, p3) ->
       return next err if err?
@@ -33,6 +39,21 @@ build_module = ->
         Feed.findOneAndRemove { id: id }, (err) ->
           next err
       next null
+      
+  Feed::shouldUpdate = () ->
+    if @updated_at?
+      now         = new Date().getTime()  / 1000
+      last_update = @updated_at.getTime() / 1000
+      (now - last_update) > update_interval
+    else
+      true
+
+  Feed::updatePostsIfNeeded = (next) ->
+    if @shouldUpdate()
+      console.log "Feed #{@url} is being updated right now"
+      @updatePosts next
+    else
+      console.log "Feed #{@url} does not need to be updated right now"
 
   Feed::updatePosts = (next) ->
     @initializeFeedParser()
@@ -44,6 +65,8 @@ build_module = ->
       next err
     req.on 'response', (res) ->
       feed.onFeedReceived res, @, next
+    @updated_at = new Date()
+    @save()
 
   Feed::initializeFeedParser = ->
     feed         = @
@@ -91,10 +114,14 @@ build_module = ->
     else
       stream.pipe @feed_parser
 
-  Feed::fetchPosts = (filters, next) ->
-    feed            = @
+  Feed::fetchPosts = (filters, options, next) ->
+    feed = @
     filters.feed_id = @id
-    FeedPost.find filters, (err, results) ->
+    criteria = FeedPost.find filters
+    criteria = criteria.skip  options.skip
+    criteria = criteria.limit options.limit
+    criteria = criteria.sort '-publication_date'
+    criteria.find (err, results) ->
       if err?
         next err
       else

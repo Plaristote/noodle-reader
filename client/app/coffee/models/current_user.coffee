@@ -1,10 +1,17 @@
 class Model.CurrentUser extends Backbone.Model
   url:   '/session'
-  feeds: []
-  
+  feeds: null
+
   initialize: ->
     @feeds = new Model.Feeds()
     @listenTo @, 'connection:success', @fetch_feeds
+    @fetch_current_user()
+
+  fetch_current_user: ->
+    $.ajax
+      method: 'GET'
+      url:    '/api/users/current'
+      success: (user) => @trigger 'connection:success', user
 
   connect: () ->
     $.ajax
@@ -13,8 +20,8 @@ class Model.CurrentUser extends Backbone.Model
       data:
         email:    @get 'email'
         password: @get 'password'
-      success: => @trigger 'connection:success'
-      error:   => @trigger 'connection:failure'
+      success: (user) => @trigger 'connection:success', user
+      error:   ()     => @trigger 'connection:failure'
     @trigger 'connection:loading'
 
   disconnect: () ->
