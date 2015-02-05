@@ -29,7 +29,6 @@ render_posts = (feed, req, res) ->
   options.limit      = (parseInt req.query.itemsPerPage) % 100    if req.query.itemsPerPage?
   options.skip       = (parseInt req.query.page) * options.limit  if req.query.page?
   filters.created_at = { $lt: new Date(parseInt req.query.from) } if req.query.from?
-  console.log "Querying for posts before #{filters.created_at.$lt.getTime()}" if filters.created_at?
   feed.fetchPosts filters, options, (err) ->
     if err?
       res.status(500).json error: err

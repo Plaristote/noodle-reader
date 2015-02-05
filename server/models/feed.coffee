@@ -49,11 +49,7 @@ build_module = ->
       true
 
   Feed::updatePostsIfNeeded = (next) ->
-    if @shouldUpdate()
-      console.log "Feed #{@url} is being updated right now"
-      @updatePosts next
-    else
-      console.log "Feed #{@url} does not need to be updated right now"
+    @updatePosts next if @shouldUpdate()
 
   Feed::updatePosts = (next) ->
     @initializeFeedParser()
