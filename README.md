@@ -5,8 +5,10 @@ coffeescript rss aggregator using node.js
 ## Compile
 ```
 cd client
+npm install
 gulp recompile
 cd ../server
+npm install
 gulp scripts
 ```
 
