@@ -26,7 +26,6 @@ build_module = ->
       next null
 
   Feed::shouldUpdate = () ->
-    return true
     if @updated_at?
       now         = new Date().getTime()  / 1000
       last_update = @updated_at.getTime() / 1000
