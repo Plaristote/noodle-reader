@@ -1,4 +1,5 @@
 var gulp            = require('gulp');
+var jasmine         = require('gulp-jasmine');
 var coffee          = require('gulp-coffee');
 var coffeeSettings  = {
   bare: true
@@ -13,3 +14,8 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['watch', 'scripts']);
+
+gulp.task('tests', ['scripts'], function() {
+  return gulp.src('./spec/**/*.js').pipe(jasmine());
+});
+

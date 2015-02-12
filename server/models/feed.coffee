@@ -2,6 +2,8 @@ mongoose   = require 'mongoose'
 request    = require 'request'
 FeedParser = require 'feedparser'
 
+require './feed_post'
+
 update_interval = 60 * 2 # 2 minute
 
 build_module = ->
@@ -14,24 +16,7 @@ build_module = ->
     updated_at:  { type: Date   }
 
   global.Feed = mongoose.model 'Feed', feed_schema
-  
-  feed_post_schema = new mongoose.Schema
-    feed_id:          { type: mongoose.Schema.Types.ObjectId }
-    title:            { type: String }
-    category:         { type: String }
-    link:             { type: String }
-    summary:          { type: String }
-    description:      { type: String }
-    publication_date: { type: Date   }
-    source:           { type: String }
-    created_at:       { type: Date   }
 
-  feed_post_schema.pre 'save', (next) ->
-    @created_at = new Date() unless @created_at?
-    next()
-
-  global.FeedPost = mongoose.model 'FeedPost', feed_post_schema
-  
   Feed.garbageCollectFeed = (id, next) ->
     (User.find { feeds: id }).exec (err, users, p3) ->
       return next err if err?
@@ -39,7 +24,7 @@ build_module = ->
         Feed.findOneAndRemove { id: id }, (err) ->
           next err
       next null
-      
+
   Feed::shouldUpdate = () ->
     if @updated_at?
       now         = new Date().getTime()  / 1000
@@ -71,7 +56,7 @@ build_module = ->
       feed.updateMetaFromStream @
     @feed_parser.on 'readable', ->
       feed.addFeedItemsFromStream @
-      
+
   Feed::updateMetaFromStream = (stream) ->
     for field in [ 'title', 'description', 'favicon', 'link' ]
       @[field] = stream.meta[field]
@@ -79,7 +64,7 @@ build_module = ->
 
   Feed::addFeedItemsFromStream = (stream) ->
     @addFeedItem item while (item = stream.read())
-    
+
   Feed::addFeedItem = (item) ->
     feed_item = new FeedPost
       feed_id:          @id
@@ -95,14 +80,6 @@ build_module = ->
         console.log 'failed to save feeditem', err
       else
         console.log 'added feedPost', feedPost.title, feedPost.feed_id
-
-  FeedPost::preventDuplicationAndSave = (next) ->
-    self = @
-    FeedPost.findOne { title: @title, publication_date: @publication_date }, (err, feedPost) ->
-      unless feedPost?
-        self.save (err) -> next err, self
-      else
-        next null, feedPost
 
   Feed::onFeedReceived = (res, stream, next) ->
     if res.statusCode != 200
