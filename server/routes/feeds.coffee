@@ -42,9 +42,8 @@ router.post '/', (req, res) ->
     if err
       res.status(422).json error: err
     else
-      feed.fetchPosts (err) ->
-        console.log 'bite', err
-        res.json feed: feed.publicAttributes()
+      feed.fetchPosts {}, { limit: 10, skip: 0 }, (err) ->
+        res.json feed.publicAttributes()
 
 router.delete '/:id', (req, res) ->
   id = req.params.id

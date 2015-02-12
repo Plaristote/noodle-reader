@@ -4,7 +4,7 @@ class View.Feed extends Backbone.View
   isLoading:    false
 
   events:
-    'click #add-feed': 'add_feed'
+    'click #unsubscribe': 'on_unsubscribe'
 
   initialize: ->
     window.current_view = @
@@ -41,3 +41,6 @@ class View.Feed extends Backbone.View
     else
       0
     @model.set 'page', page
+    
+  on_unsubscribe: ->
+    Backbone.history.navigate "/feeds/#{@model.get '_id'}/unsubscribe", trigger: true

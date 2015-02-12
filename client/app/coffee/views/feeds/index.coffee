@@ -6,11 +6,11 @@ class View.FeedIndex extends Backbone.View
 
   initialize: ->
     $('#sidebar').empty().append @$el
-    @listenTo application.current_user.feeds, 'change', @render
     @listenTo application.current_user.feeds, 'add',    @render
     @listenTo application.current_user.feeds, 'remove', @render
 
   render: ->
+    console.log "Rendering feeds", application.current_user.feeds
     @$el.html @template
       feeds: application.current_user.feeds
     @

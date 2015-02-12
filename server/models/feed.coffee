@@ -100,7 +100,7 @@ build_module = ->
 
   Feed::publicAttributes = (include_methods = []) ->
     obj =
-      id:          @id
+      _id:         @id
       title:       @title
       url:         @url
       link:        @link

@@ -10,7 +10,10 @@ class Model.Feed extends Backbone.Model
     @on 'change:page',  @loadNewPage, @
 
   url: ->
-    "#{@urlRoot}/#{@get @idAttribute}?#{@urlParameters()}"
+    if @isNew()
+      @urlRoot
+    else
+      "#{@urlRoot}/#{@get @idAttribute}?#{@urlParameters()}"
     
   urlParameters: ->
     options =
@@ -20,11 +23,17 @@ class Model.Feed extends Backbone.Model
       earliest_date = moment @attributes.feedPosts[0].publicaiton_date
       options.from  = earliest_date.unix() * 1000
     $.param options
+    
+  save: ->
+    super {},
+      success: => @trigger 'saved:success'
+      error:   => @trigger 'saved:failure'
 
   sortPosts: ->
     _.sortBy @attributes.feedPosts, (post) -> moment(post.publication_date).unix()
 
   loadNewPage: ->
+    console.log 'loadNewPage', @
     $.ajax
       method: 'GET'
       url:    @url()

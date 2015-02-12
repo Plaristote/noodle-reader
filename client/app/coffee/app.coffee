@@ -8,6 +8,7 @@ window.application = new class
     $(document).ready => @initialize()
 
   initialize: ->
+    location.hash = 'index' if location.hash == ''
     @setup_backbone()
     @current_user = new Model.CurrentUser()
     @main_view    = new MainView()
@@ -19,6 +20,7 @@ window.application = new class
     Backbone.$ = jQuery
 
   setup_controllers: ->
+    @app_controller     = new Controller.Application()
     @session_controller = new Controller.Session()
     @users_controller   = new Controller.Users()
     @feeds_controller   = new Controller.Feeds()

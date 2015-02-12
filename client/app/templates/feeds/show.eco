@@ -1,3 +1,4 @@
+<button id="unsubscribe" class="btn btn-danger btn-xs">Unsubscribe</button>
 <h1><%= @feed.get 'title' %></h1>
 <h4><a href="<%= @feed.get 'link' %>" target="_blank"><%= @feed.get 'description' %></a></h4>
 
