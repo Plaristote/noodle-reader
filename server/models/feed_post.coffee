@@ -18,6 +18,23 @@ build_module = ->
     next()
 
   global.FeedPost = mongoose.model 'FeedPost', feed_post_schema
+  
+  FeedPost.findOrCreate = (feed, item, next) ->
+    feed_id = feed.id
+    FeedPost.findOne { title: item.title, publication_date: item.pubdate, feed_id: feed_id }, (err, feedPost) ->
+      return next err, null if err?
+      feedPost = new FeedPost feed_id: feed_id unless feedPost?
+      feedPost.updateFieldsFromItem item, next
+        
+  FeedPost::updateFieldsFromItem = (item, next) ->
+    @title            = item.title
+    @description      = item.description
+    @summary          = item.summary
+    @publication_date = item.pubdate
+    @author           = item.author
+    @link             = item['rss:link']['#']
+    @source           = item.source
+    next null, this
 
   FeedPost::preventDuplicationAndSave = (next) ->
     self = @

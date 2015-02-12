@@ -26,6 +26,7 @@ build_module = ->
       next null
 
   Feed::shouldUpdate = () ->
+    return true
     if @updated_at?
       now         = new Date().getTime()  / 1000
       last_update = @updated_at.getTime() / 1000
@@ -66,20 +67,15 @@ build_module = ->
     @addFeedItem item while (item = stream.read())
 
   Feed::addFeedItem = (item) ->
-    feed_item = new FeedPost
-      feed_id:          @id
-      title:            item.title
-      description:      item.description
-      summary:          item.summary
-      publication_date: item.pubdate
-      author:           item.author
-      link:             item['rss:link']
-      source:           item.source
-    feed_item.preventDuplicationAndSave (err, feedPost) ->
+    feed_item = FeedPost.findOrCreate @, item, (err, feedPost) ->
       if err?
-        console.log 'failed to save feeditem', err
+        console.log 'failed to create feeditem', err
       else
-        console.log 'added feedPost', feedPost.title, feedPost.feed_id
+        feedPost.save (err) ->
+          if err?
+            console.log 'failed to save feeditem', err
+#          else
+#            console.log 'added feedPost', feedPost.title, feedPost.feed_id, feedPost
 
   Feed::onFeedReceived = (res, stream, next) ->
     if res.statusCode != 200
@@ -98,6 +94,7 @@ build_module = ->
       if err?
         next err
       else
+        console.log 'fetched posts', results
         feed.feedPosts = results
         next null
 
