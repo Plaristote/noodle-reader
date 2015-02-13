@@ -2,6 +2,8 @@
 coffeescript rss aggregator using node.js
 
 ## How to run the project
+Install a mongodb server. Run it.
+Then:
 ```
 # Compiles the client and the server
 ./build.sh
