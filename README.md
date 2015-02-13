@@ -1,18 +1,10 @@
 # noodle-reader
 coffeescript rss aggregator using node.js
 
-# How-to
-## Compile
+## How to run the project
 ```
-cd client
-npm install
-gulp recompile
-cd ../server
-npm install
-gulp scripts
-```
-
-## Launch
-```
-server/bin/www
+# Compiles the client and the server
+./build.sh
+# Kills any running instance of the server (if there is any) and start a new one
+./run.sh
 ```
