@@ -8,5 +8,3 @@ cd ..
 cd server
 npm install
 gulp scripts
-
-bin/www &
