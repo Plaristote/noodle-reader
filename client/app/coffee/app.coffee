@@ -15,6 +15,7 @@ window.application = new class
     @setup_controllers()
     @setup_application_events()
     @trigger 'ready'
+    @current_user.on 'connection:success', -> Backbone.history.navigate 'index', trigger: true
 
   setup_backbone: ->
     Backbone.$ = jQuery

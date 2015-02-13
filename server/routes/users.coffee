@@ -22,7 +22,7 @@ router.put '/:id', (req, res, next) ->
   if req.params.id != req.user.id
     res.status(401).json error: 'operation not permitted'
   else
-    req.user.updateAttributes req.body.user
+    req.user.updateAttributes req.body
     req.user.save (err) ->
       if err
         res.status(422).json error: err
@@ -31,7 +31,7 @@ router.put '/:id', (req, res, next) ->
 
 router.post '/', (req, res) ->
   console.log 'create', req.query, req.params, req.body
-  user = new User req.body.user
+  user = new User req.body
   user.save (err) ->
     if err
       res.status(422).json error: err

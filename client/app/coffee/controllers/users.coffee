@@ -33,8 +33,8 @@ class Controller.Users extends Backbone.Router
 
   listen_to_form: (view) ->
     @listenTo view,      'commit', @commit
-    @listenTo view.user, 'saved:success', => alert 'save success'
-    @listenTo view.user, 'saved:failure', => alert 'save failure'
+    @listenTo view.user, 'saved:success', -> application.session_controller.create view.user.attributes
+    @listenTo view.user, 'saved:failure', -> alert 'Could not create user'
 
   commit: (user) ->
     user.save()
