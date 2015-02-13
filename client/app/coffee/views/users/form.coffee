@@ -15,6 +15,7 @@ class View.UserForm extends ApplicationView
       submitButton: @mode
     @form.render()
     @$('.new-user').append @form.$el
+    @$('.new-user button').addClass 'btn btn-success'
     super
 
   submit: (event) ->
