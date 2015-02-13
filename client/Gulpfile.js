@@ -60,5 +60,5 @@ gulp.task('watch', function() {
   gulp.watch(paths.eco,      ['eco']);
 });
 
-gulp.task('recompile', ['bower-files', 'eco', 'coffee', 'javascript', 'stylesheets', 'watch']);
+gulp.task('recompile', ['bower-files', 'eco', 'coffee', 'javascript', 'stylesheets']);
 gulp.task('default',   ['bower-files', 'watch']);
